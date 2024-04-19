@@ -62,6 +62,13 @@ const FILTERS = [
     const content = "track" in item ? item.track : item.playlist;
     return !data.followingIDs.includes(content.user_id);
   }),
+  new FeedFilter("Only singles", (data) => (item) => {
+    if ("track" in item) {
+      return item.track.full_duration / 1000 / 60 < 30;
+    } else {
+      return false;
+    }
+  }),
   new FeedFilter("Deep cuts", (data) => (item) => {
     const content = "track" in item ? item.track : item.playlist;
     const userIsNotPopular = content.user.followers_count < 150;
