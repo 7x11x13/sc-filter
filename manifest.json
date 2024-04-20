@@ -1,5 +1,5 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "SoundCloud Feed Filter",
     "description": "Adds multiple filtering options to your SoundCloud feed",
     "icons": {
@@ -8,7 +8,7 @@
         "48": "icons/icon48.png",
         "128": "icons/icon128.png"
     },
-    "version": "1.0.3",
+    "version": "1.0.4",
     "content_scripts": [
         {
             "matches": ["*://*.soundcloud.com/*"],
@@ -17,11 +17,16 @@
         }
     ],
     "web_accessible_resources": [
-        "/filter.js"
+        {
+            "resources": ["/filter.js", "/filters/*.js"],
+            "matches": ["*://*.soundcloud.com/*"]
+        }
+    ],
+    "host_permissions": [
+        "*://*.soundcloud.com/*"
     ],
     "permissions": [
-        "storage",
-        "*://*.soundcloud.com/*"
+        "storage"
     ],
     "browser_specific_settings": {
         "gecko": {

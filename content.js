@@ -1,3 +1,7 @@
+if (!window.browser) {
+  browser = chrome;
+}
+
 // https://stackoverflow.com/a/61511955
 function waitForElement(selector) {
   return new Promise((resolve) => {
@@ -20,9 +24,9 @@ function waitForElement(selector) {
 }
 
 class FeedFilter {
-  constructor(name, filterFunc) {
+  constructor(name, filterFileName) {
     this.name = name;
-    this.shouldShow = filterFunc;
+    this.filterFile = `/filters/${filterFileName}.js`;
   }
 }
 
@@ -53,34 +57,11 @@ class FilterMenu {
 }
 
 const FILTERS = [
-  new FeedFilter("Default", (data) => (item) => true),
-  new FeedFilter(
-    "No reposts",
-    (data) => (item) => !item.type.includes("repost")
-  ),
-  new FeedFilter("Not following", (data) => (item) => {
-    const content = "track" in item ? item.track : item.playlist;
-    return !data.followingIDs.includes(content.user_id);
-  }),
-  new FeedFilter("Only singles", (data) => (item) => {
-    if ("track" in item) {
-      return item.track.full_duration / 1000 / 60 < 30;
-    } else {
-      return false;
-    }
-  }),
-  new FeedFilter("Deep cuts", (data) => (item) => {
-    const content = "track" in item ? item.track : item.playlist;
-    const userIsNotPopular = content.user.followers_count < 150;
-    const daysOld =
-      (Date.now() - Date.parse(content.created_at)) / (1000 * 3600 * 24);
-    const fewPlays =
-      content.playback_count &&
-      daysOld > 5 &&
-      content.playback_count <
-        5000 / (1 + Math.exp(-(daysOld + 50) / 1500)) - 2500; // totally arbitrary magic sigmoid function
-    return userIsNotPopular || fewPlays;
-  }),
+  new FeedFilter("Default", "default"),
+  new FeedFilter("No reposts", "noReposts"),
+  new FeedFilter("Not following", "notFollowing"),
+  new FeedFilter("Only singles", "onlySingles"),
+  new FeedFilter("Deep cuts", "deepCuts"),
 ];
 
 function initFilters() {
@@ -100,9 +81,9 @@ function initFilters() {
         if (!document.getElementById("sc-filter-script-2")) {
           let script = document.createElement("script");
           script.id = "sc-filter-script-2";
-          script.text = `window.activeSCFeedFilter = ${FILTERS[
-            activeFilterIndex
-          ].shouldShow.toString()}`;
+          script.src = browser.runtime.getURL(
+            FILTERS[activeFilterIndex].filterFile
+          );
           document.documentElement.appendChild(script);
         }
       });
