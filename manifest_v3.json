@@ -8,17 +8,17 @@
         "48": "icons/icon48.png",
         "128": "icons/icon128.png"
     },
-    "version": "1.0.4",
+    "version": "1.0.6",
     "content_scripts": [
         {
             "matches": ["*://*.soundcloud.com/*"],
-            "js": ["content.js"],
+            "js": ["/src/content.js"],
             "run_at": "document_start"
         }
     ],
     "web_accessible_resources": [
         {
-            "resources": ["/filter.js", "/filters/*.js"],
+            "resources": ["/src/filter.js", "/src/filters/*.js"],
             "matches": ["*://*.soundcloud.com/*"]
         }
     ],

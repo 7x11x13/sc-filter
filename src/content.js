@@ -26,7 +26,7 @@ function waitForElement(selector) {
 class FeedFilter {
   constructor(name, filterFileName) {
     this.name = name;
-    this.filterFile = `/filters/${filterFileName}.js`;
+    this.filterFile = `/src/filters/${filterFileName}.js`;
   }
 }
 
@@ -68,7 +68,7 @@ function initFilters() {
   if (!document.getElementById("sc-filter-script-1")) {
     let script = document.createElement("script");
     script.id = "sc-filter-script-1";
-    script.src = browser.runtime.getURL("/filter.js");
+    script.src = browser.runtime.getURL("/src/filter.js");
     document.documentElement.appendChild(script);
   }
   if (window.location.href.includes("soundcloud.com/feed")) {
