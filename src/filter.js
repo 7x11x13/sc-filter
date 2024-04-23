@@ -5,7 +5,7 @@ XMLHttpRequest.prototype.send = function (data) {
   const onload = this.onload;
   if (
     "__state" in this &&
-    this.__state.url.startsWith("https://api-v2.soundcloud.com/stream") &&
+    this.__state.url.startsWith("https://api-v2.soundcloud.com/stream?") &&
     onload
   ) {
     this.onload = (event) => {
